@@ -14,7 +14,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+        
+        return response([
+            'message' => 'products',
+            'products' => $products
+        ], 200);
     }
 
     /**
@@ -61,7 +66,12 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+        
+        return response([
+            'message' => 'product',
+            'products' => $product
+        ], 200);
     }
 
     /**
@@ -73,7 +83,13 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+        $product->update($request->all());
+        
+        return response([
+            'message' => 'product updated',
+            'products' => $product 
+        ], 200);
     }
 
     /**
@@ -84,6 +100,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Product::destroy($id);
+         
+        return response([
+            'message' => 'product deleted',
+            'products' => $delete
+        ], 200);
     }
 }
