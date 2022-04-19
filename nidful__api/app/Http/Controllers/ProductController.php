@@ -107,4 +107,15 @@ class ProductController extends Controller
             'products' => $delete
         ], 200);
     }
+    
+    /**
+     * Search by name
+     *
+     * @param  str  $name
+     * @return \Illuminate\Http\Response
+     */
+    public function search($product_name)
+    {
+        return Product::where('product_name','like', '%'.$product_name.'%')->get();
+    }
 }
