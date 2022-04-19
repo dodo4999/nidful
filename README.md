@@ -1,0 +1,2 @@
+# nidful
+Digital Decluttering App
