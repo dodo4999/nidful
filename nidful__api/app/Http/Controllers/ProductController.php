@@ -14,10 +14,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        // get 10 products
+        $products = Product::latest()->limit(10)->get();
         
         return response([
-            'message' => 'products',
+            'count' => $products->count(),
             'products' => $products
         ], 200);
     }
@@ -84,12 +85,34 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
-        $product->update($request->all());
         
+        $request->validate([
+            'product_name' => 'required',
+            'price' => 'required|integer',
+            'quantity' => 'required|integer',
+            'product_condition' => 'required',
+            'description' => 'required',
+        ]);
+
+        $datatoupdate = [
+            'product_name' => $request->product_name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'product_condition' => $request->product_condition,
+            'description' => $request->description,
+        ];
+        
+        if($request->hasFile('product_image')){
+        $imageName = time() . '.' . $request->product_image->extension();
+        $request->product_image->move(public_path('product_images'), $imageName);
+        $datatoupdate['product_image'] = $imageName;
+        }
+
+        Product::where('id', $id)->update($datatoupdate);
+
         return response([
-            'message' => 'product updated',
-            'products' => $product 
-        ], 200);
+            'product' => $product
+        ]);
     }
 
     /**

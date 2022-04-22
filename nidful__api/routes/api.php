@@ -28,7 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
             //Product Route
     Route::delete('/product/delete/{id}', [ProductController::class, 'destroy'])->name('product.delete');
-    Route::put('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::post('/product/store',[ProductController::class, 'store'])->name('product.store');
 });
 
