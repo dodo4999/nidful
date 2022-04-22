@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:animated_shimmer/animated_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
+import 'package:nid/controller/category_controller.dart';
 import 'package:nid/controller/product_controller.dart';
 import 'package:nid/detail_page.dart';
 import 'package:nid/widgets/product_widget.dart';
+import 'package:nid/widgets/selected_category_widget.dart';
 
 class HomeExplore extends StatefulWidget {
   const HomeExplore({Key? key}) : super(key: key);
@@ -15,8 +18,15 @@ class HomeExplore extends StatefulWidget {
 }
 
 class _HomeExploreState extends State<HomeExplore> {
-  var _isLoading = false;
+  void initState() {
+    super.initState();
+    _productController.getProductList();
+    _categoryController.getCategoryList();
+  }
+
   final ProductController _productController = Get.put(ProductController());
+  final CategoryController _categoryController = Get.put(CategoryController());
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -104,237 +114,78 @@ class _HomeExploreState extends State<HomeExplore> {
                 ],
               ),
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Container(
-                width: 60,
-                height: 30,
-                child: Center(
-                  child: Text(
-                    'All',
-                    style: TextStyle(fontSize: 15.0, color: Colors.white),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              ),
-              Text(
-                'Electronics',
-                style: TextStyle(color: Colors.grey[500]),
-              ),
-              Text(
-                'Clothings',
-                style: TextStyle(color: Colors.grey[500]),
-              ),
-              Text(
-                'Phone/Tablets',
-                style: TextStyle(color: Colors.grey[500]),
-              ),
-            ]),
+            Obx(() {
+              final snapshot = _categoryController.categories.value;
+              return _categoryController.isLoading.value
+                  ? Center(
+                      child: AnimatedShimmer(
+                        height: 10,
+                        width: 120,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(16)),
+                        delayInMilliSeconds: Duration(milliseconds: 1 * 500),
+                      ),
+                    )
+                  : Container(
+                      height: 50,
+                      width: double.infinity,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return SelectedCategoryWidget(
+                            category: snapshot[index],
+                          );
+                        },
+                      ),
+                    );
+            }),
             SizedBox(height: 20.0),
             // check loading state
 
             RefreshIndicator(
               onRefresh: () async {
-                await Future.delayed(Duration(seconds: 1));
                 _productController.getProductList();
               },
               child: Obx(() {
                 final snapshot = _productController.products.value;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0),
-                  itemBuilder: (BuildContext context, int index) {
-                    return SingleChildScrollView(
-                      child: Productwidget(
-                        model: snapshot[index],
-                      ),
-                    );
-                  },
-                );
+                return _productController.isLoading.value
+                    ? AnimatedShimmer(
+                        height: 10,
+                        width: 120,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(16)),
+                        delayInMilliSeconds: Duration(milliseconds: 1 * 500),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10.0,
+                            mainAxisSpacing: 10.0),
+                        itemBuilder: (BuildContext context, int index) {
+                          return SingleChildScrollView(
+                            child: Productwidget(
+                              model: snapshot[index],
+                            ),
+                          );
+                        },
+                      );
               }),
             ),
             SizedBox(height: 20.0),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Featured',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'View all',
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                      SizedBox(width: 5.0),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[500],
-                        size: 10.0,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  color: Colors.white,
-                  width: 171.0,
-                  height: 265.0,
-                  child: Column(
-                    children: [
-                      Image.asset('assets/Rectangle 3.png'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Headphones',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            SizedBox(width: 5.0),
-                            Container(
-                              width: 50,
-                              height: 20,
-                              child: Center(
-                                child: Text(
-                                  'Used',
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey[500]),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  color: Colors.grey[300],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            '100.00',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 21.0,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Continue'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurple,
-                          minimumSize: const Size(500, 50),
-                          maximumSize: const Size(500, 50),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  width: 171.0,
-                  height: 265.0,
-                  child: Column(
-                    children: [
-                      Image.asset('assets/Rectangle 4.png'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'JBL',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            SizedBox(width: 5.0),
-                            Container(
-                              width: 50,
-                              height: 20,
-                              child: Center(
-                                child: Text(
-                                  'Used',
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.grey[500]),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  color: Colors.grey[300],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            '250.00',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 21.0,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Continue'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurple,
-                          minimumSize: const Size(500, 50),
-                          maximumSize: const Size(500, 50),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
     );
   }
 }
+
+
+// Text(
+//                 'Electronics',
+//                 style: TextStyle(color: Colors.grey[500]),
+//               ),
+

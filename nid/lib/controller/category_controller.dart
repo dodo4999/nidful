@@ -1,34 +1,32 @@
 import 'package:get/state_manager.dart';
-import 'package:nid/models/product_models.dart';
+import 'package:nid/models/category_controller.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-class ProductController extends GetxController {
-  Rx<List<ProductModel>> products = Rx<List<ProductModel>>([]);
+class CategoryController extends GetxController {
+  Rx<List<CategoryModel>> categories = Rx<List<CategoryModel>>([]);
 
   RxBool isLoading = RxBool(false);
 
-  Future getProductList() async {
-    final url = 'http://10.0.2.2:8000/api/products';
+  Future getCategoryList() async {
+    final url = 'http://10.0.2.2:8000/api/categories';
     final Uri uri = Uri.parse(url);
 
     try {
-      products.value.clear();
       isLoading.value = true;
-
+      categories.value.clear();
       final http.Response response = await http.get(uri);
       // print(response.body);
       if (response.statusCode == 200) {
         isLoading.value = false;
-
         final content = convert.jsonDecode(response.body);
-        final data = content['products'] as List;
+        final data = content['data'] as List;
         for (var item in data) {
-          products.value.add(ProductModel.fromJson(item));
+          categories.value.add(CategoryModel.fromJson(item));
         }
       } else {
         isLoading.value = false;
-        products.value = [];
+        categories.value = [];
       }
     } catch (e) {
       isLoading.value = false;

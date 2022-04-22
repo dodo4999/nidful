@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -40,3 +41,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/products',[ProductController::class, 'index'])->name('allproducts');
 Route::get('/product/{id}',[ProductController::class, 'show'])->name('product');
 Route::get('/products/search/{name}',[ProductController::class, 'search']);
+
+// Category
+
+Route::post('/category/store', [CategoryController::class, 'store'])->name('category.store');
+// single category
+Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+// get all category
+Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');
+Route::delete('/category/delete/{id}', [CategoryController::class, 'destroy'])->name('category.delete');

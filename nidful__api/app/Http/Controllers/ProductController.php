@@ -16,10 +16,15 @@ class ProductController extends Controller
     {
         // get 10 products
         $products = Product::latest()->limit(10)->get();
+
+        foreach($products as $pro){
+           $cat =  $pro->category;
+        }
         
         return response([
             'count' => $products->count(),
-            'products' => $products
+            'products' => $products,
+            'category' => $cat
         ], 200);
     }
 
@@ -51,7 +56,8 @@ class ProductController extends Controller
             'product_condition' => $request->product_condition,
             'description' => $request->description,
             'product_image' => $imageName,
-            'user_id' => $user_id
+            'user_id' => $user_id,
+            'category_id' => $request->category_id
         ]);
         
         return response([

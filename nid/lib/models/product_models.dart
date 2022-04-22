@@ -13,6 +13,7 @@ class ProductModel {
   ProductModel({
     this.id,
     this.userId,
+    this.categoryId,
     this.quantity,
     this.price,
     this.productCondition,
@@ -25,6 +26,7 @@ class ProductModel {
 
   int? id;
   int? userId;
+  int? categoryId;
   int? quantity;
   int? price;
   String? productCondition;
@@ -37,6 +39,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
         userId: json["user_id"],
+        categoryId: json["category_id"],
         quantity: json["quantity"],
         price: json["price"],
         productCondition: json["product_condition"],
@@ -50,6 +53,7 @@ class ProductModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
+        "category_id": categoryId,
         "quantity": quantity,
         "price": price,
         "product_condition": productCondition,

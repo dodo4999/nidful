@@ -18,7 +18,7 @@ return new class extends Migration
             //foreign Key
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        
+            $table->integer('category_id');
             $table->integer('quantity');
             $table->float('price');
             $table->string('product_condition');
