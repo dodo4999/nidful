@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:nid/home_explore.dart';
+import 'package:nid/settings.dart';
 import 'package:nid/timeline.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -17,10 +18,7 @@ class _ExploreState extends State<Explore> {
   List<Widget> _pages = <Widget>[
     HomeExplore(),
     TimeLine(),
-    Icon(
-      Icons.chat,
-      size: 150,
-    ),
+    Settings(),
     Icon(
       Icons.chat,
       size: 150,
