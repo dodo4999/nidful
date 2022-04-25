@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class InpuWidget extends StatelessWidget {
   final String labelText;
+  final String hintText;
 
-  InpuWidget({Key? key, required this.labelText}) : super(key: key);
+  InpuWidget({Key? key, required this.labelText, required this.hintText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +15,13 @@ class InpuWidget extends StatelessWidget {
         child: new Column(
           children: [
             Container(
-              height: 35,
+              height: 38,
               child: new TextField(
                 decoration: InputDecoration(
                   // border: OutlineInputBorder(),
                   border: InputBorder.none,
                   labelText: labelText,
+                  hintText: hintText,
                 ),
               ),
             ),

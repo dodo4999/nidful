@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nid/feedback.dart';
 import 'package:nid/widgets/header_widget.dart';
 import 'package:nid/widgets/sub_header.dart';
 import 'package:nid/widgets/support_widget.dart';
@@ -38,9 +39,18 @@ class HelpOrSupport extends StatelessWidget {
                       icon: Icons.chat_outlined,
                       topic: 'Livechat',
                     ),
-                    SupportWidget(
-                      icon: Icons.feedback_outlined,
-                      topic: 'Send Feedback',
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FeedBackPage()),
+                        );
+                      },
+                      child: SupportWidget(
+                        icon: Icons.feedback_outlined,
+                        topic: 'Send Feedback',
+                      ),
                     ),
                     SizedBox(height: 20.0),
                     Padding(
